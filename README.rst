@@ -31,6 +31,13 @@ Deployment
     /srv/j4hr/bin/gunicorn j4hr.main:app -b 0.0.0.0:5000 -w 1
 
 
+Note
+----------
+This does not include the report generating process (which is being rewritten at this moment), you will need to figure this out.
+This does not create LDAP accounts, it is only an application to accept applications and for HR people to manage those but also the LDAP users and purge them (based on modifying the accountStatus of pizza-auth to the "purged" status).
+However, it should be easy to adapt it to run on your existing auth infrastructure.
+Feel free to contact me if you have trouble using it.
+
 Licence
 ----------
 
