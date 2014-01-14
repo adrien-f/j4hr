@@ -1,0 +1,25 @@
+
+{% extends "_layouts/base.html" %}
+{% block content %}
+<div class="col-lg-12 page-header">
+    <div class="progress">
+        <div class="progress-bar" style="width: 50%"></div>
+    </div>
+    <h1>{{icon('briefcase')}} Pick a corporation</h1>
+</div>
+<div class="col-lg-12 row">
+    {% for corporation in corporations %}
+        <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
+            <div class="panel panel-default corporation">
+                <div class="panel-body">
+                    <img src="https://image.eveonline.com/Corporation/{{corporation.id}}_256.png" alt="{{corporation.name}}">
+                    <h4>{{corporation.name}}</h4>
+                </div>
+                <div class="panel-footer">
+                    <a href="{{url_for('apply_corporation', corporation_id=corporation.id)}}" class="btn btn-block btn-default">Apply to [{{corporation.ticker}}]</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

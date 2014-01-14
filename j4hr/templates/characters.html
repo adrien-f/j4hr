@@ -1,0 +1,37 @@
+
+{% extends "_layouts/base.html" %}
+{% block content %}
+<div class="col-lg-12 page-header">
+    <div class="progress">
+        <div class="progress-bar" style="width: 25%"></div>
+    </div>
+    <h1>{{icon('user')}} Pick a character</h1>
+</div>
+<div class="col-lg-12">
+    <table class="table table-no-top-border table-vert-center">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Character Name</th>
+                <th>Date of Birth</th>
+                <th>Current Corporation</th>
+                <th></th>
+            </tr>
+        </thead>
+        {% for character in characters %}
+            <tr>
+                <td><img src="https://image.eveonline.com/Character/{{character.characterID}}_64.jpg"></td>
+                <td>{{character.name}}</td>
+                <td>{{character.DoB|datetime}}</td>
+                <td>{{character.corporationName}} {% if character.allianceName %} - {{character.allianceName}}{% endif %}</td>
+                <td>
+                    {% if character.disabled %}
+                        <a href="#" class="btn pull-right btn-danger" disabled>{{icon('times')}} Ineligible</a></td>
+                    {% else %}
+                        <a href="{{url_for('use_character', character_id=character.characterID)}}" class="btn pull-right btn-success">{{icon('check')}} Apply with this character</a></td>
+                    {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

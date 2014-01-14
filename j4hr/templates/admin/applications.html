@@ -1,0 +1,100 @@
+
+{% extends "_layouts/base.html" %}
+{% block content %}
+<div class="col-lg-12 page-header">
+    <h1>I Whip My Slaves Back And Forth <small>Applications</small></h1>
+</div>
+<div class="col-lg-12">
+    <ul class="nav nav-pills nav-justified">
+        <li class="active"><a href="#pending" data-toggle="tab">Pending</a></li>
+        <li><a href="#accepted" data-toggle="tab">Accepted</a></li>
+        <li><a href="#rejected" data-toggle="tab">Rejected</a></li>
+    </ul>
+</div>
+<br>
+<div class="tab-content">
+    <div class="tab-pane active" id="pending">
+        {% if applications['pending'] %}
+            <div class="row">
+                {% for app in applications['pending'] %}
+                    <div class="application {{loop.cycle('even', 'odd')}}">
+                        <div class="col-lg-12 clearfix">
+                            <div class="col-lg-1 col-xs-1">
+                                <img src="https://image.eveonline.com/Character/{{app.character_id}}_64.jpg" alt="">
+                            </div>
+                            <div class="col-lg-4 col-xs-4">
+                                <h4>{{app.name}}</h4>
+                            </div>
+                            <div class="col-lg-4">
+                                <span class="application-time">{{app.created_at|datetime(format='full')}}</span>
+                            </div>
+                            <div class="col-lg-3 col-xs-3">
+                                <a href="{{url_for('admin.report', application_id=app.id)}}" class="btn btn-success btn-application pull-right">{{icon('eye')}} See report</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="col-lg-12">
+                <h4>No applications pending</h4>
+            </div>
+        {% endif %}
+    </div>
+    <div class="tab-pane" id="accepted">
+        {% if applications['accepted'] %}
+            <div class="row">
+                {% for app in applications['accepted'] %}
+                    <div class="application {{loop.cycle('even', 'odd')}}">
+                        <div class="col-lg-12 clearfix">
+                            <div class="col-lg-1 col-xs-1">
+                                <img src="https://image.eveonline.com/Character/{{app.character_id}}_64.jpg" alt="">
+                            </div>
+                            <div class="col-lg-4 col-xs-4">
+                                <h4>{{app.name}}</h4>
+                            </div>
+                            <div class="col-lg-4">
+                                <span class="application-time">{{app.created_at|datetime(format='full')}}</span>
+                            </div>
+                            <div class="col-lg-3 col-xs-3">
+                                <a href="{{url_for('admin.report', application_id=app.id)}}" class="btn btn-success btn-application pull-right">{{icon('eye')}} See report</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="col-lg-12">
+                <h4>No applications accepted</h4>
+            </div>
+        {% endif %}
+    </div>
+    <div class="tab-pane" id="rejected">
+        {% if applications['rejected'] %}
+            <div class="row">
+            {% for app in applications['rejected'] %}
+                <div class="application {{loop.cycle('even', 'odd')}}">
+                    <div class="col-lg-12 clearfix">
+                        <div class="col-lg-1 col-xs-1">
+                            <img src="https://image.eveonline.com/Character/{{app.character_id}}_64.jpg" alt="">
+                        </div>
+                        <div class="col-lg-4 col-xs-4">
+                            <h4>{{app.name}}</h4>
+                        </div>
+                        <div class="col-lg-4">
+                            <span class="application-time">{{app.created_at|datetime(format='full')}}</span>
+                        </div>
+                        <div class="col-lg-3 col-xs-3">
+                            <a href="{{url_for('admin.report', application_id=app.id)}}" class="btn btn-success btn-application pull-right">{{icon('eye')}} See report</a>
+                        </div>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <div class="col-lg-12">
+                <h4>No applications rejected</h4>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

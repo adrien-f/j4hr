@@ -1,0 +1,71 @@
+
+{% extends "_layouts/base.html" %}
+{% block content %}
+<link rel="stylesheet" href="/static/public/css/datatables.css">
+<script src="/static/public/js/jquery.dataTables.min.js"></script>
+<script src="/static/public/js/datables.js"></script>
+<div class="col-lg-12 page-header">
+    <h1>Auth'd users of {{current_user.corporation[0]}}</small></h1>
+</div>
+<div class="col-lg-8 col-lg-offset-2">
+    <p>This is all the users of your corporation in Auth. You might dump their ldap info, see their report, and most importantly, purge them.</p>
+    <table id="auth-users" class="table table-vert-center table-striped">
+        <thead>
+            <tr>
+                <th>Character name</th>
+                <th>Auth status</th>
+                <th><span class="pull-right">Actions</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{user.characterName[0]}}</td>
+                    <td>{{user.accountStatus[0]}}</td>
+                    <td><div class="btn-group pull-right">
+                        <a href="#" class="btn btn-sm btn-primary" disabled>{{icon('folder-open-o')}} See report</a>
+                        <a href="#" data-user="{{user.get_id()}}" class="btn btn-sm btn-danger js-purge-modal">{{icon('bolt')}} PURGE</a>
+                    </div></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="purge-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title text-danger">PURGINATOR</h4>
+            </div>
+            <form action="{{url_for('admin.auth_purge')}}" method="POST" class="form-horizontal">
+                <div class="modal-body">
+                    {{purge_form.hidden_tag()}}
+                    <input type="hidden" name="user_id">
+                    <p>You are going to purge <strong class="purge_user">USER</strong>, are you sure ?</p>
+                    <div class="form-group">
+                        <label for="message" class="col-lg-2 control-label">Reason</label>
+                        <div class="col-lg-10">
+                            <textarea name="message" id="message" class="form-control" cols="30" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger btn-lg">{{icon('bolt')}} Purge</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#auth-users').dataTable()
+        $('#auth-users').on('click', function(e) {
+            $('input[name=user_id]').val($(e.target).data('user'))
+            $('strong.purge_user').text($(e.target).data('user'))
+            $('#purge-modal').modal('show')
+        });
+    })
+</script>
+{% endblock %}

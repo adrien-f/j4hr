@@ -1,0 +1,43 @@
+
+<nav class="navbar navbar-inverse" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{{ url_for('home') }}">
+            J4LP <i class="fa fa-building"></i> HR
+        </a>
+    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            {% if current_user.is_authenticated() %}
+                <li>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{url_for('admin.applications')}}">Applications</a></li>
+                        <li><a href="{{url_for('admin.auth_users')}}">Auth users</a></li>
+                        <li><a href="{{url_for('admin.badies')}}">Badies</a></li>
+                    </ul>
+                </li>
+            {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if current_user.is_authenticated() %}
+                <li><a href="{{url_for('admin.logout')}}">Logout</a></li>
+            {% endif %}
+            <li>
+                <a class="navbar-chikun dropdown-toggle" data-toggle="dropdown" href="#"><img src="/static/public/images/chikun.png" width="30" alt=""><b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="http://auth.j4lp.com">Auth</a></li>
+                    <li><a href="http://forum.j4lp.com">Forum</a></li>
+                    <li><a href="http://reddit.com/r/fweddit">Subreddit</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div><!-- /.navbar-collapse -->
+</nav>

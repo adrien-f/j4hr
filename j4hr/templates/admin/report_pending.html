@@ -1,0 +1,29 @@
+
+{% extends "_layouts/base.html" %}
+{% block content %}
+<div class="col-lg-12 text-center">
+    <h1>Generating report, do not close this page</h1>
+    <i class="fa fa-spinner fa-spin fa-4x"></i>
+    <h3 class="status-text">Working...</h3>
+</div>
+<script>
+    statuses = ['Not working...', 'I don\'t know...', 'Eeeeeeh', 'Blame Rina', 'Nearly there... Just kidding', 'Oh Oh Oh, no...', 'This one is the good one']
+    $(document).ready(function() {
+        var requested = false
+
+        xhr_generate = $.get('/admin/application/{{application_id}}/report/generate')
+        setInterval(function() {
+            $('.status-text').text(statuses[Math.floor(Math.random()*statuses.length)])
+            xhr = $.get('/admin/application/{{application_id}}/report/status')
+            xhr.done(function(data) {
+                if (data['status'] == 'done') {
+                    window.location = '/admin/application/{{application_id}}/report'
+                }
+                if (data['status'] == 'error') {
+                    alert('An error occured getting the status of the report')
+                }
+            })
+        }, 3000)
+    })
+</script>
+{% endblock %}

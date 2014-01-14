@@ -1,0 +1,141 @@
+/* =============================================================================
+App specific CSS file.
+========================================================================== */
+
+/* universal */
+
+html {
+    overflow-y: scroll;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+section {
+    overflow: auto;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.container-narrow{
+    margin: 0 auto;
+    max-width: 700px;
+}
+
+/* Forms */
+
+.navbar-form input[type="text"],
+.navbar-form input[type="password"] {
+    width: 180px;
+}
+
+
+.form-register {
+    width: 50%;
+}
+
+.form-register .form-control {
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.page-header {
+    margin-top: 0;
+}
+
+.navbar-inverse {
+    background-color: #2c3e50;
+    border-radius: 0;
+    border-color: darken(#2c3e50, 10%)
+}
+
+.navbar-brand {
+    color: white !important;
+}
+
+.navbar-nav {
+    > .active > a {
+        background-color: darken(#2c3e50, 10%) !important;
+    }
+    li > a:hover {
+        background-color: darken(#2c3e50, 10%) !important;
+    }
+}
+
+.navbar-chikun {
+    padding: 10px !important;
+}
+
+.panel-heading h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.api-link {
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.table-vert-center {
+    tbody > tr > td {
+        vertical-align: middle;
+    }
+}
+
+.table-no-top-border tbody > tr:first-child > td {
+    border-top: 0;
+}
+
+.panel.corporation {
+    text-align: center;
+    img {
+        width: 100%;
+    }
+    .panel-body {
+        height: 250px;
+    }
+    @media (min-width: 769px) and (max-width: 991px) {
+        .panel-body {
+            height: 250px;
+        }
+    }
+    @media (max-width: 768px) {
+        .panel-body {
+            height: auto;
+        }
+    }
+}
+
+.application {
+    border-top: 1px solid #eee;
+    padding-bottom: 20px;
+    padding-top: 20px;
+
+    h4 {
+        padding-top: 10px;
+    }
+
+    .btn-application {
+        margin-top: 15px;
+    }
+}
+.application.odd {
+    background-color: #eee;
+}
+
+.application-time {
+    margin-top: 20px;
+    display: block;
+}

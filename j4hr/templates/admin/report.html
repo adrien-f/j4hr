@@ -1,0 +1,303 @@
+
+{% extends "_layouts/base.html" %}
+{% block content %}
+<link rel="stylesheet" href="/static/public/css/datatables.css">
+<script src="/static/public/js/jquery.dataTables.min.js"></script>
+<script src="/static/public/js/datables.js"></script>
+<div class="col-lg-12 page-header">
+    <div class="btn-group pull-right">
+        <a href="#" data-toggle="modal" data-target="#accept-modal" class="btn btn-success">{{icon('check')}} Accept</a>
+        <a href="#" data-toggle="modal" data-target="#reject-modal" class="btn btn-danger">{{icon('times')}} Reject</a>
+    </div>
+    <h1>{{icon('eye')}} Report <small>{{application.name}}</small></h1>
+    <p>{{application.name}}{% if application.reddit_id %} (<a href="http://reddit.com/u/{{application.reddit.username}}">/u/{{application.reddit.username}}</a>){% endif %} has applied for <strong>{{application.corporation.name}}</strong> on {{application.created_at|date}}</p>
+</div>
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt>Status</dt>
+                {% if application.status == 1 %}
+                    <dd>Pending</dd>
+                {% elif application.status == 2 %}
+                    <dd class="text-success">Accepted</dd>
+                {% elif application.status == 99 %}
+                    <dd class="text-danger">Rejected</dd>
+                {% else %}
+                    <dd>Unknown</dd>
+                {% endif %}
+                {% if application.status == 99 %}
+                    <dt>Reason for rejection</dt>
+                    <dd>{{application.reject_message}}</dd>
+                {% endif %}
+                <dt>Motivation text</dt>
+                <dd>{{application.motivation}}</dd>
+                <dt>Updated at</dt>
+                <dd>{{application.updated_at|datetime}}</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+{% if report['errors'] %}
+    <div class="col-lg-12">
+        <p>There have been errors while generating this report:</p>
+        {% for error in report['errors'] %}
+            <li>{{error}}</li>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="col-lg-12">
+        <h3>Characters</h3>
+    </div>
+    <div class="col-lg-12 clearfix">
+        {% for character in report['characters'] %}
+            <div class="col-lg-4">
+                <div class="panel {% if character.sheet.characterID == application.character_id %}panel-primary{% else %}panel-default{% endif %}">
+                    <div class="panel-heading">
+                        <img src="https://image.eveonline.com/Character/{{character.sheet.characterID}}_32.jpg" alt="" class="pull-right">
+                        <h4>{{character.sheet.name}}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt>Skill points</dt>
+                            <dd>{{"{:,}".format(character.sheet.skillPoints)}} SP</dd>
+                            <dt>Date of Birth</dt>
+                            <dd>{{character.sheet.DoB|date_from_unix}}</dd>
+                            <dt>Race</dt>
+                            <dd>{{character.sheet.race}}</dd>
+                            <dt>Bloodline</dt>
+                            <dd>{{character.sheet.bloodLine}}</dd>
+                            <dt>Ancestry</dt>
+                            <dd>{{character.sheet.ancestry}}</dd>
+                            <dt>Gender</dt>
+                            <dd>{{character.sheet.gender}}</dd>
+                            <dt>Corporation</dt>
+                            <dd><a href="http://evemaps.dotlan.net/corp/{{character.sheet.corporationID}}" target="_blank">{{character.sheet.corporationName}}</a></dd>
+                            {% if character.sheet.allianceName %}
+                                <dt>Alliance</dt>
+                                <dd><a href="http://evemaps.dotlan.net/alliance/{{character.sheet.allianceID}}" target="_blank">{{character.sheet.allianceName}}</a></dd>
+                            {% endif %}
+                            <dt>Balance</dt>
+                            <dd>{{"{:,}".format(character.sheet.balance)}} ISK</dd>
+                            <dt>Security Status</dt>
+                            <dd>{{"{num:f}".format(num=character.sheet.securityStatus)}}</dd>
+                            <dt>Last Location</dt>
+                            <dd><a href="http://evemaps.dotlan.net/system/{{character.sheet.lastKnownLocation}}" target="_blank">{{character.sheet.lastKnownLocation}}</a></dd>
+                            <dt>Killboard</dt>
+                            <dd><a href="https://zkillboard.com/character/{{character.sheet.characterID}}/" target="_blank">As seen on zKillboard</a></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="col-lg-12">
+        <ul class="nav nav-pills nav-justified">
+            {% for character in report['characters'] %}
+                {% if loop.first %}
+                    <li class="active"><a href="#{{character.sheet.characterID}}" data-toggle="tab">{{character.sheet.name}}</a></li>
+                {% else %}
+                    <li><a href="#{{character.sheet.characterID}}" data-toggle="tab">{{character.sheet.name}}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="tab-content">
+        {% for character in report['characters'] %}
+            {% if loop.first %}
+                <div class="tab-pane active" id="{{character.sheet.characterID}}">
+            {% else %}
+                <div class="tab-pane" id="{{character.sheet.characterID}}">
+            {% endif %}
+            <div class="col-lg-12">
+                <h3>Corporations History</h3>
+            </div>
+            <div class="col-lg-12">
+                <div class="panel-group">
+                    {% for corp in character.corporations %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a href="http://evemaps.dotlan.net/corp/{{corp.corporationID}}">{{corp.corporationName}}</a> {% if corp.allianceName %} - <a href="http://evemaps.dotlan.net/alliance/{{corp.allianceID}}">{{corp.allianceName}}</a>{% endif %} - From {{corp.startDate|date_from_unix}}
+                                </h4>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <br>
+            </div>
+            <hr>
+            <div class="col-lg-12">
+                <h3>Wallet</h3>
+            </div>
+            <div class="col-lg-12">
+                <table class="table table-striped" id="transaction-table-{{character.sheet.characterID}}">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Date Unix</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Raw Amount</th>
+                            <th>Pilot 1</th>
+                            <th>Pilot 2</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for transaction in character['wallet'] %}
+                        <tr>
+                            <td>{{transaction.date|datetime_from_unix}}</td>
+                            <td>{{transaction.date}}</td>
+                            <td>{{transaction.type}}</td>
+                            <td>{{"{:,}".format(transaction.amount)}} ISK</td>
+                            <td>{{transaction.amount}}</td>
+                            <td><a href="http://evewho.com/pilot/{{transaction.ownerName1}}">{{transaction.ownerName1}}</a></td>
+                            <td><a href="http://evewho.com/pilot/{{transaction.ownerName2}}">{{transaction.ownerName2}}</a></td>
+                            <td>{{transaction.reason}}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <div class="col-lg-12">
+                <h3>Contacts</h3>
+            </div>
+            <div class="col-lg-12">
+                <table class="table table-striped" id="contacts-list-{{character.sheet.characterID}}">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>In Watchlist</th>
+                            <th>Standing</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for contact in character['contacts'] %}
+                            <tr>
+                                <td>
+                                    <a href="http://evewho.com/pilot/{{contact.contactName}}">{{contact.contactName}}</a>
+                                    <small>[<a href="http://evemaps.dotlan.net/corp/{{contact.contactName}}">Corp</a>] [<a href="http://evemaps.dotlan.net/alliance/{{contact.contactName}}">Alliance</a>]</small>
+                                </td>
+                                {% if contact.inWatchlist %}
+                                    <td>True</td>
+                                {% else %}
+                                    <td>False</td>
+                                {% endif %}
+                                <td>{{contact.standing}}</td>
+                                <td>{{contact.type}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <div class="col-lg-12">
+                <h3>Assets</h3>
+            </div>
+            <div class="col-lg-12">
+                <table class="table table-striped" id="assets-list-{{character.sheet.characterID}}">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Group</th>
+                            <th>Quantity</th>
+                            <th>Base Price</th>
+                            <th>Raw Base Price</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for asset in character['assets'] %}
+                            <tr>
+                                <td>{{asset.item_name}}</td>
+                                <td>{{asset.group_name}}</td>
+                                <td>{{asset.quantity}}</td>
+                                <td>{{"{:,}".format(asset.base_price)}} ISK</td>
+                                <td>{{asset.base_price}}</td>
+                                <td>{{asset.location_name}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function() {
+                $('#transaction-table-{{character.sheet.characterID}}').dataTable({
+                    "aoColumns": [
+                        { 'iDataSort': 1},
+                        { 'bVisible': false, 'bSearchable': false },
+                        null,
+                        { 'iDataSort': 4},
+                        { 'bVisible': false, 'bSearchable': false },
+                        null,
+                        null,
+                        null,
+                    ]
+                });
+                $('#contacts-list-{{character.sheet.characterID}}').dataTable();
+                $('#assets-list-{{character.sheet.characterID}}').dataTable({
+                    "aoColumns": [
+                        null,
+                        null,
+                        null,
+                        { 'iDataSort': 4},
+                        { 'bVisible': false, 'bSearchable': false },
+                        null
+                    ]
+                });
+            })
+        </script>
+        {% endfor %}
+    </div>
+{% endif %}
+<div class="modal fade" id="accept-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Accepting application</h4>
+            </div>
+            <form action="{{url_for('admin.accept', application_id=application.id)}}" method="POST" class="form-horizontal">
+                <div class="modal-body">
+                    {{accept_form.hidden_tag()}}
+                    <p>You are going to accept this application, are you sure ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="reject-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Rejecting application</h4>
+            </div>
+            <form action="{{url_for('admin.reject', application_id=application.id)}}" method="POST" class="form-horizontal">
+                <div class="modal-body">
+                    {{accept_form.hidden_tag()}}
+                    <p>You are going to reject this application, are you sure ?</p>
+                    <div class="form-group">
+                        <label for="message" class="col-lg-2 control-label">Message</label>
+                        <div class="col-lg-10">
+                            <textarea name="message" id="message" class="form-control" cols="30" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

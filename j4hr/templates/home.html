@@ -1,0 +1,68 @@
+
+{% extends "_layouts/base.html" %}
+{% block content %}
+<div class="col-lg-12">
+    <div class="alert alert-danger">
+        WAIT UNTIL YOU ARE ACCEPTED IN GAME BEFORE REGISTERING ON AUTH.J4LP.COM OR WE WILL REJECT AND DELETE YOUR APPLICATION WITHOUT WARNING.
+    </div>
+</div>
+<div class="col-lg-12 page-header">
+    <h1>I Whip My Slaves Back And Forth <small>Human Resources</small></h1>
+</div>
+<div class="col-lg-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>New application</h3>
+        </div>
+        <div class="panel-body">
+            <p>Thanks you for your interest in joining a J4LP corporation, please create an API Key by clicking on the following link (NOT NOT FORGET TO SET "NO EXPIRY" TO YOUR API KEY):</p>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h3 class="api-link"><a href="https://community.eveonline.com/support/api-key/CreatePredefined?accessMask=65544538" target="_blank">API KEY</a></h3>
+                </div>
+            </div>
+            <p>And fill in this form to see if you are elligible:</p>
+            <form action="{{url_for('api_check')}}" method="post">
+                {{api_form.hidden_tag()}}
+                <div class="form-group">
+                    <label for="key_id">Key ID</label>
+                    {{api_form.key_id(placeholder="Key ID", class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    <label for="vcode">vCode</label>
+                    {{api_form.vcode(placeholder="vCode", class_="form-control")}}
+                </div>
+                <a class="btn btn-default js-api-popover" data-title="About our API Key usage" data-content="<p>For security reasons, we will ask and check for access to your mail, wallet transactions and other auditing data.</p><p>We will not share it with peers.</p><p>Please note that daily checks are in place and your access will be revoked if the system locates an incorrect API or at the discretion of the Alliance Leadership.</p>" data-html=true>{{icon('eye')}} About API Keys</a>
+                <button class="btn btn-primary pull-right" type="submit">{{icon('check')}} Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="col-lg-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Application status</h3>
+        </div>
+        <div class="panel-body">
+            <p>You should have received your application details by email, if not, please check your spam folder or contact someone from HR.</p>
+            <form action="{{url_for('status')}}" method="post">
+                {{application_form.hidden_tag()}}
+                <div class="form-group">
+                    <label for="application_id">Application #</label>
+                    {{application_form.application_id(placeholder="Application #", class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    <label for="application_id">Application secret</label>
+                    {{application_form.application_secret(placeholder="Application secret", class_="form-control")}}
+                </div>
+                <button class="btn btn-primary pull-right">{{icon('check')}} Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('.js-api-popover').popover('hide')
+    })
+</script>
+{% endblock %}

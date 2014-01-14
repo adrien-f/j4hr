@@ -1,0 +1,33 @@
+
+{% extends "_layouts/base.html" %}
+{% block content %}
+<div class="col-lg-12 page-header">
+    <h1>{{icon('eye')}} Application status</h1>
+</div>
+<div class="col-lg-12">
+    <p>Here is your application status:</p>
+    <div class="panel panel-default">
+        <div class="panel-heading">Application #{{application.access_key}}</div>
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt>Corporation</dt>
+                <dd>{{application.corporation.name}}</dd>
+                <dt>Character</dt>
+                <dd>{{application.name}}</dd>
+                <dt>Created at</dt>
+                <dd>{{application.created_at|datetime}}</dd>
+                <dt>Status</dt>
+                {% if application.status == 1 %}
+                    <dd>Pending</dd>
+                {% elif application.status == 2 %}
+                    <dd class="text-success">Accepted</dd>
+                {% elif application.status == 99 %}
+                    <dd class="text-danger">Rejected</dd>
+                {% else %}
+                    <dd>Unknown</dd>
+                {% endif %}
+            </dl>
+        </div>
+    </div>
+</div>
+{% endblock %}

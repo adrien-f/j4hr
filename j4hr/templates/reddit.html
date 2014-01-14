@@ -1,0 +1,16 @@
+
+{% extends "_layouts/base.html" %}
+{% block content %}
+<div class="col-lg-12 page-header">
+    <div class="progress">
+        <div class="progress-bar" style="width: 60%"></div>
+    </div>
+    <h1>{{icon('briefcase')}} Reddit Association</h1>
+</div>
+<div class="col-lg-6 col-lg-offset-3">
+    <p>Hi ! Thanks you for your interest in joining Fweddit. We are a Reddit corporation and so we need to verify your Reddit profile. Please click on the following link and allow us access to your history and your reddit identity (we will not share it with anyone else). You will not be able to process if you do not allow us access.</p>
+    <div class="col-lg-12 text-center">
+        <a href="{{url}}" class="btn btn-lg btn-primary">Go to Reddit</a>
+    </div>
+</div>
+{% endblock %}

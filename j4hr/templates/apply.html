@@ -1,0 +1,37 @@
+
+{% extends "_layouts/base.html" %}
+{% block content %}
+<div class="col-lg-12 page-header">
+    <div class="progress">
+        <div class="progress-bar" style="width: 90%"></div>
+    </div>
+    <h1>{{icon('briefcase')}} Application</h1>
+</div>
+<div class="col-lg-6 col-lg-offset-3">
+    <div class="col-lg-12 text-center">
+        <img src="https://image.eveonline.com/Corporation/{{corporation.id}}_128.png" alt="{{corporation.name}}">
+    </div>
+    <br>
+    <p>Hi! You are about to apply for <strong>{{corporation.name}}</strong>. This is the last step, please tell us a bit more about yourself, your Eve life and why you choose to apply today.</p>
+    <form action="{{url_for('apply_summary')}}" method="post" class="form-horizontal">
+        {{form.hidden_tag()}}
+        <div class="form-group">
+            <label for="email" class="col-lg-2 control-label">Email</label>
+            <div class="col-lg-10">
+                <input type="text" name="email" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="motivation" class="col-lg-2 control-label">Motivation</label>
+            <div class="col-lg-10">
+                <textarea name="motivation" class="form-control" id="motivation" cols="30" rows="5"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-primary">{{icon('chevron-right')}} Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

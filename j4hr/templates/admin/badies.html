@@ -1,0 +1,20 @@
+
+{% extends "_layouts/base.html" %}
+{% block content %}
+<div class="col-lg-12 page-header">
+    <h1>I Whip My Slaves Back And Forth <small>Badies of {{corporation.name}}</small></h1>
+</div>
+<div class="col-lg-6 col-lg-offset-3 well">
+    <p>This is the people not in auth. <strong>Be careful though, some people might be alt of people already in Fweddit Auth.</strong></p>
+<table class="table">
+    <tbody>
+        {% for badie in badies %}
+            <tr>
+                <td><a id="{{badie[1]}}" href="#{{badie[1]}}" onclick="CCPEVE.showInfo(1377, {{badie[1]}})">{{badie[0]}}</a></td>
+            </tr>
+
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}
