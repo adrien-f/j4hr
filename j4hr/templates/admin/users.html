@@ -61,7 +61,7 @@
 <script>
     $(document).ready(function() {
         $('#auth-users').dataTable()
-        $('#auth-users').on('click', function(e) {
+        $('#auth-users').on('click', '.js-purge-modal', function(e) {
             $('input[name=user_id]').val($(e.target).data('user'))
             $('strong.purge_user').text($(e.target).data('user'))
             $('#purge-modal').modal('show')

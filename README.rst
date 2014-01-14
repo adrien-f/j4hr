@@ -12,11 +12,14 @@ Quickstart
 
     git clone https://github.com/adrien-f/j4hr
     cd j4hr
-    pip install -r requirements/dev.txt
+    pip install -r requirements.txt
     cp j4hr/settings_dist.py j4hr/settings.py
     # Edit your settings
     export J4HR_ENV='dev' # OR export J4HR_ENV='prod'
     python manage.py createdb
+    python manage.py update_corporations
+    python manage.py update_reftypes
+    python manage.py update_outposts
     python manage.py runserver
 
 

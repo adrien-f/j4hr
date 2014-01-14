@@ -87,12 +87,6 @@ def use_character(character_id):
         session.clear()
         flash('Session error, no API Key found in session', 'danger')
         return redirect(url_for('home'))
-    # Do we already have this character in application ?
-    # if Application.query.filter_by(character_id=character_id).first():
-    #     app.logger.warn('Character #{character} tried to reapply.'.format(character=character_id))
-    #     session.clear()
-    #     flash('We already have an application for this character, if you have lost your application details, please contact HR staff', 'danger')
-    #     return redirect(url_for('home'))
     api = EveTools(session['key_id'], session['vcode'])
     characters = api.check_eligibility(api.get_characters(full=True))
     for character in characters:

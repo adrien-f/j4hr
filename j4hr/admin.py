@@ -211,88 +211,9 @@ def generate_report(application_id):
         for api_character in api.client.account.Characters().characters:
             # Get character informations
             character = {'sheet': {}, 'corporations': [], 'wallet': [], 'contacts': [], 'assets': []}
-            try:
-                sheet = api.client.char.CharacterSheet(characterID=api_character.characterID)
-            except RuntimeError as e:
-                app.logger.exception(e)
-                report['errors'].append(str(e))
-                break
-            for key, value in sheet.__dict__.items():
-                if not isinstance(value, (IndexRowset, Rowset, Element)):
-                    character['sheet'][key] = value
-            try:
-                info = api.client.eve.CharacterInfo(characterID=api_character.characterID)
-            except RuntimeError as e:
-                app.logger.exception(e)
-                report['errors'].append(str(e))
-                break
-            for key, value in info.__dict__.items():
-                if not isinstance(value, (IndexRowset, Rowset, Element)):
-                    character['sheet'][key] = value
-            character['sheet']['skillPoints'] = int(character['sheet']['skillPoints'])
 
-            # Get Corp history
-            for emp_corporation in info.employmentHistory:
-                corporation_sheet = api.client.corp.CorporationSheet(corporationID=emp_corporation.corporationID)
-                sleep(0.5)
-                corporation = {}
-                for key, value in corporation_sheet.__dict__.items():
-                    if not isinstance(value, (IndexRowset, Rowset, Element)):
-                        corporation[key] = value
-                corporation['startDate'] = emp_corporation.startDate
-                character['corporations'].append(corporation)
+            # YEAH, not giving that away, you can figure it out.
 
-
-            # Building wallet
-            reftypes = json.loads(r.get('eve.refs'))
-            try:
-                api_journal = api.client.char.WalletJournal(characterID=api_character.characterID, rowCount=2560)
-            except RuntimeError as e:
-                app.logger.exception(e)
-                report['errors'].append(str(e))
-                break
-
-            for api_transaction in api_journal.transactions:
-                transaction = {}
-                for index, key in enumerate(api_transaction.__dict__['_cols']):
-                    transaction[key] = api_transaction.__dict__['_row'][index]
-                transaction['type'] = reftypes.get(str(transaction['refTypeID']), 'Other')
-                character['wallet'].append(transaction)
-
-            # Building Contacts
-            try:
-                api_contacts = api.client.char.ContactList(characterID=api_character.characterID)
-            except RuntimeError as e:
-                app.logger.exception(e)
-                report['errors'].append(str(e))
-                break
-            for api_contact in api_contacts.contactList:
-                contact = {}
-                for index, key in enumerate(api_contact.__dict__['_cols']):
-                    contact[key] = api_contact.__dict__['_row'][index]
-                    contact['type'] = 'Personal'
-                character['contacts'].append(contact)
-            for api_contact in api_contacts.corporateContactList:
-                contact = {}
-                for index, key in enumerate(api_contact.__dict__['_cols']):
-                    contact[key] = api_contact.__dict__['_row'][index]
-                    contact['type'] = 'Corporate'
-                character['contacts'].append(contact)
-            for api_contact in api_contacts.allianceContactList:
-                contact = {}
-                for index, key in enumerate(api_contact.__dict__['_cols']):
-                    contact[key] = api_contact.__dict__['_row'][index]
-                    contact['type'] = 'Alliance'
-                character['contacts'].append(contact)
-
-            # Asset list
-            try:
-                api_assets = api.client.char.AssetList(characterID=api_character.characterID)
-            except RuntimeError as e:
-                app.logger.exception(e)
-                report['errors'].append(str(e))
-                break
-            character['assets'] = parse_assets(api_assets.assets)
             report['characters'].append(character)
     r.set('j4hr:report:%s' % application_id, json.dumps(report))
     r.delete('j4hr:report:%s:lock' % application_id)
@@ -319,7 +240,6 @@ def badies():
             req = requests.get('http://evewho.com/api.php?type=corplist&id={0}&page={1}'.format(corporation.id, page))
             sleep(3)
             page += 1
-            print(req.text)
             characters = req.json()['characters']
             for character in characters:
                 if character['name'] not in ldap_users:
